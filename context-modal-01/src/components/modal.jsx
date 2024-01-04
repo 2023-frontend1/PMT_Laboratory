@@ -17,8 +17,6 @@ const PureModal = ({ onClose, text }) => {
   )
 }
 
-const portalElement = document.getElementById('modal')
-
 const Modal = ({ modalProps, onClose }) => {
   const isOpen = modalProps.isOpen
   const text = modalProps.text
@@ -26,7 +24,12 @@ const Modal = ({ modalProps, onClose }) => {
   if (!isOpen) return
 
   return (
-    <>{createPortal(<PureModal {...{ onClose, text }} />, portalElement)}</>
+    <>
+      {createPortal(
+        <PureModal {...{ onClose, text }} />,
+        document.getElementById('modal')
+      )}
+    </>
   )
 }
 
@@ -38,6 +41,9 @@ export default Modal
 const PhotosensitiveContainer = styled.div`
   width: 100%;
   height: 100vh;
+
+  position: absolute;
+  z-index: 1;
 
   display: flex;
   justify-content: center;
