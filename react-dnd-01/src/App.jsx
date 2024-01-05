@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import "./App.css"
+import debounce from "./debounce"
 
 function App() {
   const dragItem = useRef() // 처음 드래그하는 아이템의 idx정보를 알기위해 선언
@@ -34,7 +35,10 @@ function App() {
     console.log(e.target.innerHTML, "drag 도착")
   }
 
-  const handleDrop = (e) => {
+  /**@description 과도한 event를 막기위해 debounce 적용 */
+  const debounceHandleDragOver = debounce(handleDragOver, 500)
+
+  const handleDrop = () => {
     const newList = [...list] // 복사본 배열 생성
     const dragItemValue = newList[dragItem.current] // drag하고싶은 item의 idx값으로 아이템의 value를 dragItemValue에 저장
     newList.splice(dragItem.current, 1) // target item 배열에서 삭제
@@ -58,7 +62,7 @@ function App() {
           }}
           draggable
           onDragStart={(e) => onDragStart(e, idx)}
-          onDragEnter={(e) => handleDragOver(e, idx)}
+          onDragEnter={(e) => debounceHandleDragOver(e, idx)}
           onDragEnd={handleDrop}
           onDragOver={(e) => e.preventDefault()}
         >
